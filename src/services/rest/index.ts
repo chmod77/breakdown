@@ -74,9 +74,26 @@ const searchUsername = async ({params}: any) => {
     }
 }
 
+const getVerificationRequests  = async () => {
+try {
+    let resp = await axios.get(urls.getVerificationRequestsUrl)
+    let data = await resp.data
+    return ({
+        success:data?.success,
+        requests: data?.verification_requests
+    })
+    
+} catch (error) {
+    return  ({
+        success: false, data: null, message: 'Failed to get verification requests at the moment. Try again later'
+    })
+}
+}
+
 export {
     signIn,
     assignAdmin,
-    searchUsername
+    searchUsername,
+    getVerificationRequests
 }
 
