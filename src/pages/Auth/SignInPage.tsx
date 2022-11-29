@@ -23,11 +23,11 @@ export default function SignInPage() {
         let response = await signinData
         setSigningIn(false)
 
-        if (response.success === true && response.data.is_root === true) {
+        if (response.success === true && response.data.is_admin === true) {
             openNotificationWithIcon('success', 'Success', 'You have successfully signed in!')
             history.push('/dash')
         }
-        else if (response.success === true && response.data.is_root === false) {
+        else if (response.success === true && response.data.is_admin === false) {
             openNotificationWithIcon('error', 'Error', 'Only root users allowed.')
         }
         else {

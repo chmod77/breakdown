@@ -17,7 +17,6 @@ export default function Routes({appProps}: any) {
         <UnauthenticatedRoute path="/admin-roles" exact component={AdminRolesPage} appProps={appProps} />
         <UnauthenticatedRoute path="/users" exact component={UsersPage} appProps={appProps} />
         <UnauthenticatedRoute path="/data-export" exact component={DataExportPage} appProps={appProps} />
-
    </Switch>
   )
 }
