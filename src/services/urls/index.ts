@@ -1,4 +1,4 @@
-const baseUrl = "http://3.85.20.245"
+const baseUrl = "https://api.thebreakdown.app"
 const loginUrl = `${baseUrl}/api/login`
 const searchUserUrl = `${baseUrl}/api/search_username`
 const assingAdminUrl = `${baseUrl}/api/assign_admin`
