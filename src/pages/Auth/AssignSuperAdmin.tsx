@@ -1,22 +1,92 @@
-import React, { useState } from 'react'
-import { Footer } from '../../components'
+import React, { useState, useCallback, useRef } from 'react'
+import { Footer, openNotificationWithIcon } from '../../components'
+import urls from '../../services/urls';
 import { Link } from 'react-router-dom'
 import SectionMessage from '@atlaskit/section-message';
+import { Mentions } from 'antd';
+import debounce from 'lodash/debounce';
+import type { OptionProps } from 'antd/es/mentions';
+import { assignAdmin } from '../../services/rest';
+import { Spin } from 'antd';
 
+
+
+
+const { Option } = Mentions;
 
 export default function AssignSuperAdminPage() {
     const [found, setFound] = useState<boolean | null>(null)
-    const onHandleSearch = (e: any) => {
-        if (e === "shalom") {
-            setFound(true)
+    const [loading, setLoading] = useState(false);
+    const [selectedUser, setSelectedUser] = useState<any>(null)
+    const [assigning, setAssigning] = useState(false)
+
+    const [users, setUsers] = useState([]);
+    const ref = useRef<string>();
+
+    const handleAssign = async (user_id: any) => {
+        setAssigning(true)
+        let params = {
+            user_id: user_id
         }
-        else if (e === "shalomze") {
-            setFound(false)
+        let resp = await assignAdmin({ params })
+        console.log(resp)
+        setAssigning(false)
+        if (resp.success === true) {
+            openNotificationWithIcon('success', 'Success', 'You have successfully assigned admin!')
         }
-        else {
-            setFound(null)
-        }
+
     }
+
+    const loadUsers = (key: string) => {
+        if (!key) {
+            setUsers([]);
+            return;
+        }
+
+        fetch(`${urls.searchUserUrl}?username=${key}`)
+            .then(res => res.json())
+            .then((items) => {
+                console.log(items)
+                if (ref.current !== key) return;
+                setLoading(false);
+                console.log(items)
+                if (items?.users) {
+                    setUsers(items?.users.slice(0, 10));
+
+                }
+            });
+    };
+
+    const onSelect = (option: any) => {
+        console.log('select', option);
+        console.log(option.children)
+        //@ts-ignore
+        let obj = option.children.find(data => data.type === 'img');
+        console.log(obj?.props?.src)
+        setSelectedUser({
+            username: option.value,
+            id: option.key,
+            avatar: obj?.props?.src
+        })
+    }
+    const onChange = (value: string) => {
+        console.log(value, selectedUser?.username)
+        if (value.substring(1) !== selectedUser?.username && selectedUser !== null) {
+            setSelectedUser(null)
+        }
+    };
+
+    const debounceLoadUsers = useCallback(debounce(loadUsers, 400), []);
+
+    const onSearch = (search: string) => {
+        console.log('Search:', search);
+        ref.current = search;
+        setLoading(!!search);
+        setUsers([]);
+        debounceLoadUsers(search);
+    };
+
+
     return (
         <div className="auth-page-wrapper">
             {/* auth page bg */}
@@ -61,61 +131,92 @@ export default function AssignSuperAdminPage() {
                         </div>
                     </div>
                     {/* end row */}
-                    <div className="row justify-content-center">
-                        <div className="col-md-8 col-lg-6 col-xl-5">
-                            <div className="p-2 mt-4 ">
-                                <form action="index.html">
-                                    <div className="mb-3">
-                                        <input type="text" className="form-control" id="username" placeholder="Search by username" onChange={(e) => {
+                    <Spin spinning={assigning}>
+                        <div className="row justify-content-center">
+                            <div className="col-md-8 col-lg-6 col-xl-5">
+                                <div className="p-2 mt-4 ">
+                                    <form>
+                                        <div className="mb-3">
+                                            <Mentions style={{ width: '100%' }}
+                                                loading={loading}
+                                                onSearch={onSearch}
+                                                onSelect={onSelect}
+                                                onChange={onChange}
+                                                placeholder="Input @ to search and select users"
+                                            >
+                                                {users.map(({ id, username, avatar }) => (
+                                                    <Option key={id} value={username} className="antd-demo-dynamic-option">
+                                                        <img src={avatar !== null ? avatar : "assets/images/user-vector.png"} alt={username} height={30} width={30} style={{
+                                                            borderRadius: "50%",
+                                                            marginRight: 10
+                                                        }} />
+                                                        <span>{username}</span>
+
+                                                    </Option>
+                                                ))}
+                                            </Mentions>
+
+                                            {/* <input type="text" className="form-control" id="username" placeholder="Search by username" onChange={(e) => {
                                             console.log(e.target.value)
                                             onHandleSearch(e.target.value)
-                                        }} />
-                                    </div>
-                                    <div className="mt-4">
-                                        {
-                                            found === true && (
-                                                <div className='pb-1 text-center'>
-                                                    <img src={"assets/images/user-vector.png"} height={50} />
-                                                    <p className="fw-bold pt-1" style={{
-                                                        fontFamily: "Roboto"
+                                        }} /> */}
+                                        </div>
+                                        <div className="mt-4">
+                                            {
+                                                selectedUser !== null && (
+                                                    <div className='pb-1 text-center'>
+                                                        <img src={selectedUser.avatar} height={50} width={50} style={{
+                                                            borderRadius: "50%"
+                                                        }} />
+                                                        <p className="fw-bold pt-1" style={{
+                                                            fontFamily: "Roboto"
 
-                                                    }}>Shalom Nyende</p>
-                                                    <div className="mb-2">
-                                                        <Link to={"/signin-admin"} className="btn w-50 btn-sm " style={{
+                                                        }}>{selectedUser.username}</p>
+                                                        <div className="mb-2">
+                                                            <button
+                                                                className="btn w-50 btn-sm " style={{
+                                                                    backgroundColor: "#721003",
+                                                                    color: "#fff",
+                                                                    fontFamily: "Roboto"
+                                                                }}
+                                                                type="button"
+                                                                onClick={() => handleAssign(selectedUser.id)} >ASSIGN {selectedUser.username}</button>
+                                                            {/* <Link to={"/signin-admin"} className="btn w-50 btn-sm " style={{
                                                             backgroundColor: "#721003",
                                                             color: "#fff",
                                                             fontFamily: "Roboto"
-                                                        }} type="button">ASSIGN IN AS SHALOM</Link>
+                                                        }} type="button">ASSIGN {selectedUser.username}</Link> */}
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            )
-                                        }
-                                        {found === false && (
-                                            <SectionMessage
-                                                title="No Result Found"
-                                                appearance="error"
-                                            >
-                                                <p>No Users found with username `shalomze`</p>
-                                            </SectionMessage>
-                                        )}
-                                       
-                                    </div>
-                                    <div className='text-center mt-4'>
-                                    <p>
-                                            <Link to="/" style={{
-                                                color: "#721003",
-                                                fontFamily: "Roboto"
+                                                )
+                                            }
+                                            {found === false && (
+                                                <SectionMessage
+                                                    title="No Result Found"
+                                                    appearance="error"
+                                                >
+                                                    <p>No Users found with username `shalomze`</p>
+                                                </SectionMessage>
+                                            )}
 
-                                            }} className="fw-bold text-decoration-underline text-center"> LOGOUT ROOT USER</Link>
-                                        </p>
-                                    </div>
-                                </form>
+                                        </div>
+                                        <div className='text-center mt-4'>
+                                            <p>
+                                                <Link to="/" style={{
+                                                    color: "#721003",
+                                                    fontFamily: "Roboto"
+
+                                                }} className="fw-bold text-decoration-underline text-center"> LOGOUT ROOT USER</Link>
+                                            </p>
+                                        </div>
+                                    </form>
 
 
+                                </div>
+                                {/* end card */}
                             </div>
-                            {/* end card */}
                         </div>
-                    </div>
+                    </Spin>
                     {/* end row */}
                 </div>
                 {/* end container */}

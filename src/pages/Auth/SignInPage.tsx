@@ -1,8 +1,40 @@
-import React from 'react'
-import { Footer } from '../../components'
-import {Link} from 'react-router-dom'
+import React, { useState } from 'react'
+import { Footer, openNotificationWithIcon } from '../../components'
+import { Link } from 'react-router-dom'
+import { useHistory } from 'react-router-dom';
+import { signIn } from '../../services/rest';
+import { Spin } from 'antd';
+
 
 export default function SignInPage() {
+    const [username, setUsername] = useState<string>()
+    const [password, setPassword] = useState<string>()
+    const [signingIn, setSigningIn] = useState(false)
+
+    const history = useHistory();
+
+    const onSignIn = async () => {
+        setSigningIn(true)
+        let params = {
+            username: username,
+            password: password
+        }
+        let signinData = await signIn({ params })
+        let response = await signinData
+        setSigningIn(false)
+
+        if (response.success === true && response.data.is_root === true) {
+            openNotificationWithIcon('success', 'Success', 'You have successfully signed in!')
+            history.push('/dash')
+        }
+        else if (response.success === true && response.data.is_root === false) {
+            openNotificationWithIcon('error', 'Error', 'Only root users allowed.')
+        }
+        else {
+            openNotificationWithIcon('error', 'Error', response?.message)
+        }
+    }
+
     return (
         <div className="auth-page-wrapper pt-5">
             {/* auth page bg */}
@@ -25,68 +57,73 @@ export default function SignInPage() {
                                         <img src="assets/images/tba-logo.png" alt="" height={50} />
                                     </a>
                                 </div>
-                                
+
                             </div>
                         </div>
                     </div>
                     {/* end row */}
-                    <div className="row justify-content-center">
-                        <div className="col-md-8 col-lg-6 col-xl-5">
-                            <div className="card mt-4">
-                                <div className="card-body p-4">
-                                    <div className="text-center mt-2">
-                                        <p className="text-muted" style={{
-                                            fontFamily:"Roboto"
-                                        }}>Sign in to your Administrator or Super-Administrator User Account.</p>
-                                    </div>
-                                    <div className="p-2 mt-4">
-                                        <form action="">
-                                            <div className="mb-3">
-                                                <label htmlFor="username" className="form-label" style={{
-                                                    fontFamily:"Roboto"
-                                                }}>Username</label>
-                                                <input type="text" className="form-control" id="username" placeholder="Enter username" />
-                                            </div>
-                                            <div className="mb-3">
-                                                <div className="float-end">
-                                                    <a href="auth-pass-reset-basic.html" className="text-muted">Forgot password?</a>
+                    <Spin spinning={signingIn}>
+                        <div className="row justify-content-center">
+                            <div className="col-md-8 col-lg-6 col-xl-5">
+                                <div className="card mt-4">
+                                    <div className="card-body p-4">
+                                        <div className="text-center mt-2">
+                                            <p className="text-muted" style={{
+                                                fontFamily: "Roboto"
+                                            }}>Sign in to your Administrator or Super-Administrator User Account.</p>
+                                        </div>
+                                        <div className="p-2 mt-4">
+                                            <form action="">
+                                                <div className="mb-3">
+                                                    <label htmlFor="username" className="form-label" style={{
+                                                        fontFamily: "Roboto"
+                                                    }}>Username</label>
+                                                    <input type="text" className="form-control" id="username" placeholder="Enter username" onChange={(e) => {
+                                                        setUsername(e.target.value)
+                                                    }}
+                                                    />
                                                 </div>
-                                                <label className="form-label" htmlFor="password-input" style={{
-                                                    fontFamily:"Roboto"
-                                                }}>Password</label>
-                                                <div className="position-relative auth-pass-inputgroup mb-3">
-                                                    <input type="password" className="form-control pe-5 password-input" placeholder="Enter password" id="password-input" />
-                                                    <button className="btn btn-link position-absolute end-0 top-0 text-decoration-none text-muted password-addon" type="button" id="password-addon"><i className="ri-eye-fill align-middle" /></button>
+                                                <div className="mb-3">
+                                                    <div className="float-end">
+                                                        <a href="auth-pass-reset-basic.html" className="text-muted">Forgot password?</a>
+                                                    </div>
+                                                    <label className="form-label" htmlFor="password-input" style={{
+                                                        fontFamily: "Roboto"
+                                                    }}>Password</label>
+                                                    <div className="position-relative auth-pass-inputgroup mb-3">
+                                                        <input type="password" className="form-control pe-5 password-input" placeholder="Enter password" id="password-input" onChange={(e) => setPassword(e.target.value)} />
+                                                        <button className="btn btn-link position-absolute end-0 top-0 text-decoration-none text-muted password-addon" type="button" id="password-addon"><i className="ri-eye-fill align-middle" /></button>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div className="mt-4">
-                                                <button className="btn w-100" style={{
-                                                    backgroundColor:"#721003",
-                                                    color:"#fff",
-                                                    fontFamily:"Roboto"
-                                                }} type="button">SIGN IN</button>
-                                            </div>
-                                           
-                                        </form>
+                                                <div className="mt-4">
+                                                    <button className="btn w-100" style={{
+                                                        backgroundColor: "#721003",
+                                                        color: "#fff",
+                                                        fontFamily: "Roboto"
+                                                    }} type="button" onClick={onSignIn}>SIGN IN</button>
+                                                </div>
+
+                                            </form>
+                                        </div>
                                     </div>
+                                    {/* end card body */}
                                 </div>
-                                {/* end card body */}
-                            </div>
-                            {/* end card */}
-                            <div className="mt-4 text-center">
-                                <p className="mb-0" style={{
-                                    fontFamily:"Roboto"
-                                }}>Don't have an Admin account ? 
-                                </p>
-                                <p>
-                                <Link to={"/root"} style={{
-                                    color:"#721003",
-                                    fontFamily:"Roboto"
-                                }} className="fw-bold text-decoration-underline"> Sign in to your ROOT USER ACCOUNT </Link>
-                                </p>
+                                {/* end card */}
+                                <div className="mt-4 text-center">
+                                    <p className="mb-0" style={{
+                                        fontFamily: "Roboto"
+                                    }}>Don't have an Admin account ?
+                                    </p>
+                                    <p>
+                                        <Link to={"/root"} style={{
+                                            color: "#721003",
+                                            fontFamily: "Roboto"
+                                        }} className="fw-bold text-decoration-underline"> Sign in to your ROOT USER ACCOUNT </Link>
+                                    </p>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    </Spin>
                     {/* end row */}
                 </div>
                 {/* end container */}

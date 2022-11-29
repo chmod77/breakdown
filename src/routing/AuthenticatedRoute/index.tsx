@@ -33,7 +33,7 @@ export default function AuthenticatedRoute({ component: C, appProps, ...rest }: 
   }
 
   if (appProps.isAuthenticated && appProps.isVerified && appProps.isProfiled) {
-    return <Redirect to="/dashboard" />;
+    return <Redirect to="/dash" />;
   }
 
 //   if (appProps.isAuthenticated && !appProps.isVerified && !appProps.isProfiled) {
