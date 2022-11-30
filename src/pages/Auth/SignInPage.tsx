@@ -55,7 +55,7 @@ export default function SignInPage() {
         <React.Fragment>
 
             <Helmet>
-            <script src="assets/js/pages/password-addon.init.js" async ></script>
+            <script src="assets/js/pages/password-addon.js" async ></script>
 
             </Helmet>
             <div className="auth-page-wrapper pt-5">
