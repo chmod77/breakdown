@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import logo from './logo.svg';
 import './App.css';
 import Routes from './routes';
+import { AuthContext } from './context/AuthContext';
 
 function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [userHasAuthenticated, setUserHasAuthenticated] = useState(false)
+
+  const { isAuthenticated, isLoading, userHasAuthenticated }: any = useContext(AuthContext);
   return (
     <React.Fragment>
       <Routes appProps={{ userHasAuthenticated, isAuthenticated }} />

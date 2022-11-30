@@ -1,6 +1,8 @@
 import React from 'react'
+import { AuthContext } from '../../context/AuthContext'
 
 export default function Welcome() {
+    const { user }: any = React.useContext(AuthContext)
     return (
         <div className="row">
             <div className="col-xl-12">
@@ -10,8 +12,7 @@ export default function Welcome() {
                         <h2 className="mt-3" style={{
                             color: "#000",
                             fontFamily: "Oswald"
-                        }}>Hi, Test User 1!</h2>
-
+                        }}>Hi, {user?.user?.username}!</h2>
                     </div>{/* end card header */}
                     <div className="card-body">
                         <p>Welcome to The Breakdown App Admin Dashboard.</p>

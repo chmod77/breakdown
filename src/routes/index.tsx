@@ -10,13 +10,13 @@ export default function Routes({appProps}: any) {
         <UnauthenticatedRoute path="/root" exact component={RootSignInPage} appProps={appProps}/>
         <UnauthenticatedRoute path="/assign" exact component={AssignSuperAdminPage} appProps={appProps}/>
         <UnauthenticatedRoute path="/signin-admin" exact component={SignInAdminPage} appProps={appProps}/>
-        <UnauthenticatedRoute path="/dash" exact component={Homepage} appProps={appProps} />
-        <UnauthenticatedRoute path="/creator-verification" exact component={CreatorVerificationRequestsPage} appProps={appProps} />
-        <UnauthenticatedRoute path="/official-verification" exact component={OfficialRequestsPage} appProps={appProps} />
-        <UnauthenticatedRoute path="/flagged-content" exact component={FlaggedContentPage} appProps={appProps} />
-        <UnauthenticatedRoute path="/admin-roles" exact component={AdminRolesPage} appProps={appProps} />
-        <UnauthenticatedRoute path="/users" exact component={UsersPage} appProps={appProps} />
-        <UnauthenticatedRoute path="/data-export" exact component={DataExportPage} appProps={appProps} />
+        <AuthenticatedRoute path="/dash" exact component={Homepage} appProps={appProps} />
+        <AuthenticatedRoute path="/creator-verification" exact component={CreatorVerificationRequestsPage} appProps={appProps} />
+        <AuthenticatedRoute path="/official-verification" exact component={OfficialRequestsPage} appProps={appProps} />
+        <AuthenticatedRoute path="/flagged-content" exact component={FlaggedContentPage} appProps={appProps} />
+        <AuthenticatedRoute path="/admin-roles" exact component={AdminRolesPage} appProps={appProps} />
+        <AuthenticatedRoute path="/users" exact component={UsersPage} appProps={appProps} />
+        <AuthenticatedRoute path="/data-export" exact component={DataExportPage} appProps={appProps} />
    </Switch>
   )
 }

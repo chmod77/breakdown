@@ -12,10 +12,13 @@ export default function Sidebar() {
 
     return (
         <div className="app-menu navbar-menu" style={{
-            marginTop: 20
+            marginTop: 16
         }}>
             {/* LOGO */}
-            <div className="navbar-brand-box">
+            <div className="navbar-brand-box" style={{
+                borderBottom: '0.2px solid grey',
+                
+            }}>
                 {/* Dark Logo*/}
                 <a href="/" className="logo logo-dark">
                     <span className="logo-sm">
@@ -40,7 +43,7 @@ export default function Sidebar() {
                     <i className="ri-record-circle-line" />
                 </button>
             </div>
-            <hr></hr>
+            {/* <hr></hr> */}
             <div id="scrollbar">
                 <div className="container-fluid">
                     <div id="two-column-menu">

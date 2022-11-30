@@ -5,6 +5,7 @@ import 'antd/dist/antd.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { HashRouter as Router } from 'react-router-dom';
+import { AuthProvider } from './context';
 
 
 const root = ReactDOM.createRoot(
@@ -12,10 +13,11 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <React.StrictMode>
-    <Router>
-      <App />
-    </Router>
-
+    <AuthProvider >
+      <Router>
+        <App />
+      </Router>
+    </AuthProvider>
   </React.StrictMode>
 );
 

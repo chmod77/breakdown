@@ -4,9 +4,12 @@ import { Link } from 'react-router-dom'
 import { signIn } from '../../services/rest'
 import { Spin } from 'antd';
 import { useHistory } from 'react-router-dom';
+import { AuthContext } from '../../context/AuthContext';
 
 
 export default function RootSignInPage() {
+    const { user, setUser, setIsAuthenticating, userHasAuthenticated }: any = React.useContext(AuthContext)
+
     const [username, setUsername] = useState<string>()
     const [password, setPassword] = useState<string>()
     const [signingIn, setSigningIn] = useState(false)
@@ -25,12 +28,22 @@ export default function RootSignInPage() {
 
         if (response.success === true && response.data.is_root === true) {
             openNotificationWithIcon('success', 'Success', 'You have successfully signed in!')
+            console.log(response)
+            setUser(response.data)
+            userHasAuthenticated(true)
+            setIsAuthenticating(false)
             history.push('/assign')
         }
         else if (response.success === true && response.data.is_root === false) {
+            setUser(null)
+            userHasAuthenticated(false)
+            setIsAuthenticating(false)
             openNotificationWithIcon('error', 'Error', 'Only root users allowed.')
         }
         else {
+            setUser(null)
+            userHasAuthenticated(false)
+            setIsAuthenticating(false)
             openNotificationWithIcon('error', 'Error', response?.message)
         }
     }
