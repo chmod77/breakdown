@@ -8,6 +8,7 @@ import debounce from 'lodash/debounce';
 import type { OptionProps } from 'antd/es/mentions';
 import { assignAdmin } from '../../services/rest';
 import { Spin } from 'antd';
+import { AuthContext } from '../../context/AuthContext';
 
 
 
@@ -15,6 +16,7 @@ import { Spin } from 'antd';
 const { Option } = Mentions;
 
 export default function AssignSuperAdminPage() {
+    const {logout}:any = React.useContext(AuthContext)
     const [found, setFound] = useState<boolean | null>(null)
     const [loading, setLoading] = useState(false);
     const [selectedUser, setSelectedUser] = useState<any>(null)
@@ -202,11 +204,13 @@ export default function AssignSuperAdminPage() {
                                         </div>
                                         <div className='text-center mt-4'>
                                             <p>
-                                                <Link to="/" style={{
+                                                <a 
+                                                onClick={logout}
+                                                style={{
                                                     color: "#721003",
                                                     fontFamily: "Roboto"
 
-                                                }} className="fw-bold text-decoration-underline text-center"> LOGOUT ROOT USER</Link>
+                                                }} className="fw-bold text-decoration-underline text-center"> LOGOUT ROOT USER</a>
                                             </p>
                                         </div>
                                     </form>
