@@ -58,7 +58,7 @@ export default function UnauthenticatedRoute({ component: C, appProps, ...rest }
         //@ts-ignore
           ? <C {...props} {...appProps} />
           : <Redirect
-            to={redirect === "" || redirect === null ? "/dashboard" : redirect}
+            to={redirect === "" || redirect === null ? "/dash" : redirect}
           />}
     />
   );

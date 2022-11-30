@@ -8,7 +8,7 @@ export default function Routes({appProps}: any) {
    <Switch>
         <UnauthenticatedRoute path="/" exact component={SignInPage} appProps={appProps}/>
         <UnauthenticatedRoute path="/root" exact component={RootSignInPage} appProps={appProps}/>
-        <UnauthenticatedRoute path="/assign" exact component={AssignSuperAdminPage} appProps={appProps}/>
+        <AuthenticatedRoute path="/assign" exact component={AssignSuperAdminPage} appProps={appProps}/>
         <UnauthenticatedRoute path="/signin-admin" exact component={SignInAdminPage} appProps={appProps}/>
         <AuthenticatedRoute path="/dash" exact component={Homepage} appProps={appProps} />
         <AuthenticatedRoute path="/creator-verification" exact component={CreatorVerificationRequestsPage} appProps={appProps} />
