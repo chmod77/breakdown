@@ -1,5 +1,5 @@
 import React from 'react'
-import { Navbar, Sidebar, Welcome } from '../sections'
+import { Welcome } from '../sections'
 import RootPage from './RootPage'
 
 

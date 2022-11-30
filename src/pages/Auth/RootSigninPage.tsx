@@ -6,6 +6,9 @@ import { Spin } from 'antd';
 import { useHistory } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
 
+//@ts-ignore
+import { Helmet } from "react-helmet";
+
 
 export default function RootSignInPage() {
     const { user, setUser, setIsAuthenticating, userHasAuthenticated }: any = React.useContext(AuthContext)
@@ -48,7 +51,12 @@ export default function RootSignInPage() {
         }
     }
     return (
-        <div className="auth-page-wrapper">
+        <React.Fragment>
+            <Helmet>
+            <script src="assets/js/pages/password-addon.init.js" async ></script>
+
+            </Helmet>
+            <div className="auth-page-wrapper">
             {/* auth page bg */}
             {/* <div className="auth-one-bg-position auth-one-bg" id="auth-particles">
                 <div className="bg-overlay" />
@@ -162,6 +170,8 @@ export default function RootSignInPage() {
             <Footer />
             {/* end Footer */}
         </div>
+        </React.Fragment>
+        
 
     )
 }

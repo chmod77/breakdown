@@ -5,9 +5,9 @@ import { Link, useLocation } from 'react-router-dom'
 export default function Sidebar() {
     const location = useLocation();
 
-    console.log('hash', location.hash);
-    console.log('pathname', location.pathname);
-    console.log('search', location.search);
+    // console.log('hash', location.hash);
+    // console.log('pathname', location.pathname);
+    // console.log('search', location.search);
 
 
     return (

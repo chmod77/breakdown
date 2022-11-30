@@ -4,6 +4,16 @@ import { AuthContext } from '../../context/AuthContext'
 
 export default function Navbar() {
     const {user, logout}: any = React.useContext(AuthContext)
+
+    const renderRole = () => {
+        if(user?.is_admin == true && (user?.is_root == false || user?.is_root == null || user?.is_root == 0) ){
+            return "Admin"
+        }
+        else if(user?.is_admin == true && (user?.is_root == true || user?.is_root == 1) ){
+            return "Root/Admin"
+        }
+        return "Admin"
+    }
   return (
     <header id="page-topbar">
                 <div className="layout-width">
@@ -45,7 +55,7 @@ export default function Navbar() {
                                         <img className="rounded-circle header-profile-user" src={user?.user_avatar?.path ? user.user_avatar.path : "assets/images/user-vector.png"} alt="Header Avatar" />
                                         <span className="text-start ms-xl-2">
                                             <span className="d-none d-xl-inline-block ms-1 fw-medium user-name-text">{user.user.username}</span>
-                                            <span className="d-none d-xl-block ms-1 fs-12 text-muted user-name-sub-text">Admin</span>
+                                            <span className="d-none d-xl-block ms-1 fs-12 text-muted user-name-sub-text">{renderRole()}</span>
                                         </span>
                                     </span>
                                 </button>
